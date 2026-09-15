@@ -31,6 +31,8 @@ def build(request, charging):
     series = request['time_series']
     grid = request.get('grid', {})
     stored = request.get('strategy', {})
+    eta_c_default = request.get('eta_c', 0.95)
+    eta_d_default = request.get('eta_d', 0.95)
     return Optimizer(
         strategy=OptimizationStrategy(charging_strategy=charging,
                                       discharging_strategy=stored.get('discharging_strategy', 'none')),
@@ -43,10 +45,12 @@ def build(request, charging):
             s_min=bat['s_min'], s_max=bat['s_max'], s_initial=bat['s_initial'],
             p_demand=bat.get('p_demand'), s_goal=bat.get('s_goal'),
             c_min=bat['c_min'], c_max=bat['c_max'], d_max=bat['d_max'], p_a=bat['p_a'],
-            c_priority=bat.get('c_priority', 0)) for bat in request['batteries']],
+            c_priority=bat.get('c_priority', 0),
+            eta_c=bat.get('eta_c', eta_c_default),
+            eta_d=bat.get('eta_d', eta_d_default)) for bat in request['batteries']],
         time_series=TimeSeriesData(dt=series['dt'], gt=series['gt'], ft=series['ft'],
                                    p_N=series['p_N'], p_E=series['p_E']),
-        eta_c=request.get('eta_c', 0.95), eta_d=request.get('eta_d', 0.95), M=1e6)
+        M=1e6)
 
 
 def solve_at(request, charging, scale):
