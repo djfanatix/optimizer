@@ -15,7 +15,7 @@ def build(primary_goal):
                                  s_capacity=2000, s_min=0, s_max=2000, s_initial=0,
                                  c_min=0, c_max=2000, d_max=0, p_a=0.00001)],
         time_series=TimeSeriesData(dt=[3600], gt=[0], ft=[2000], p_N=[0.0003], p_E=[0.0003]),
-        eta_c=0.95, eta_d=0.95, M=1e6)
+        M=1e6)
 
 
 def test_minimize_cost_exports_when_storing_is_worth_less_than_selling():
